@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Diagnostics.SymbolStore;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Reflection;
@@ -23,6 +24,9 @@ namespace KeywordWarrior
         // - 던전 적 구현
         // - UI 만들기 ( 자동화 필수)
         // - 적 ai 만들기(;;;;)
+
+        public int FLOOR = 1;
+
         static void Main(string[] args)
         {
             UserInterfacePrinter();
@@ -41,7 +45,7 @@ namespace KeywordWarrior
             //    }
             //    else if (tempChoice == 1) // 던전 입장
             //    {
-            //
+            //    
             //    }
             //}
             //ChoiceYourDifficulty();
@@ -225,32 +229,43 @@ namespace KeywordWarrior
         }
 
 
-        static void UserInterfacePrinter()
-        {//Console.WriteLine("┌───────────────────────────────────────────────────────────────┐");
+        //int a = 5;
+        //string ss = $" 1 턴당 {a}를 얻는다.";
+        static void UserInterfacePrinter(ref Character ch)
+        {
+
+           //Console.WriteLine("┌───────────────────────────────────────────────────────────────┐");
          //Console.WriteLine($"│───────────────────────────────────────────────────────────────│");
          //Console.WriteLine("│                                                               │");
             Console.WriteLine("┌───────────────────────────────────────────────────────────────┐");
-            Console.WriteLine($"│──────────────────────── 현제 5 층 ────────────────────────────│");
+            Console.WriteLine($"│──────────────────────── 현제 2 층 ────────────────────────────│");
             Console.WriteLine("│┌───────────────────────────┐     ┌───────────────────────────┐│");
             Console.WriteLine($"││체력   : 100  보호막 : 100 │     │체력  :  100  보호막 : 100 ││");
             Console.WriteLine($"││공격력 : 100  주문력 : 100 │     │공격력 : 100  주문력 : 100 ││ ");
             Console.WriteLine("│├──────── 상태 이상 ────────┤     ├──────── 상태 이상 ────────┤│");
             Console.WriteLine("││ 점화 lv.3 3 / 감점 lv.2 1 │     │ 점화 lv.3 3 / 감점 lv.2 1 ││"); // 27 34 50 61 77
             Console.WriteLine("│└───────────────────────────┘     └───────────────────────────┘│");
-            Console.WriteLine("│┌────── 키워드 사용 가능 ───────────┐           │");
-            Console.WriteLine("││                                                               │");
-            Console.WriteLine("││                                                              │");
-            Console.WriteLine("││                                                               │");
-            Console.WriteLine("││                                                               │");
-            Console.WriteLine("│                                                               │");
-            Console.WriteLine("│                                                               │");
-            Console.WriteLine("│                                                               │");
+            Console.WriteLine("│┌───────────────────── 키워드 사용 가능 ──────────────────────┐│");
+            Console.WriteLine("││1 턴당 얻는 키워드 : 3  \t최대 보유 가능 키워드 수 : 5   ││");
+            Console.WriteLine("││점화\t 강화\t                                               ││");
+            Console.WriteLine("││                                                             ││");
+            Console.WriteLine("│└─────────────────────────────────────────────────────────────┘│");
+            Console.WriteLine("│ 플레이어는 대상에게 점화 lv.2을 사용했다 피해량 : 100         │");
+            Console.WriteLine("│ 플레이거는 대상에게 상태이상 화염을 걸었다.                   │");
+            Console.WriteLine("│ 플레이어는 대상에게 점화 lv.1을 사용했다 피해량 : 100         │");
             Console.WriteLine("│                                                               │");
             Console.WriteLine("│                                                               │");
             Console.WriteLine("│───────────────────────────────────────────────────────────────┤");
             Console.WriteLine("│ 키워드 입력 : 불 강화 강화 불 강화                            │");
             Console.WriteLine("└───────────────────────────────────────────────────────────────┘");
+            
         }
+
+        enum Abilitys
+        {
+            Ignition, Reinforce, Copy
+        }
+
 
         static int KeywordsActive(string s)
         {
@@ -278,7 +293,6 @@ namespace KeywordWarrior
         {
             Console.WriteLine($"{s} Lv.{lv} 공격!");
         }
-
 
         /// <summary>
         /// 복제 처리 및 그 외에 모든 강화 처리
@@ -657,20 +671,64 @@ namespace KeywordWarrior
             private double speed { get; }
         }*/
 
+        static void CombatScreenPrinter(Character pChar, Character eChar)
+        {
+            Console.WriteLine("┌───────────────────────────────────────────────────────────────┐");
+            Console.WriteLine($"│──────────────────────── 현제 {FLOOR} 층 ────────────────────────────│");
+            Console.WriteLine("│┌───────────────────────────┐     ┌───────────────────────────┐│");
+            Console.WriteLine($"││체력   : {pChar.GetCharacterInfo(CharacterType.healthPoint)}  보호막 : {pChar.GetCharacterInfo(CharacterType.shield)} │     │체력  :  {eChar.GetCharacterInfo(CharacterType.healthPoint)}  보호막 : {eChar.GetCharacterInfo(CharacterType.shield)} ││");
+            Console.WriteLine($"││공격력 : {pChar.GetCharacterInfo(CharacterType.attackDamage)}  주문력 : {pChar.GetCharacterInfo(CharacterType.abilityPower)} │     │공격력 : {eChar.GetCharacterInfo(CharacterType.attackDamage)}  주문력 : {eChar.GetCharacterInfo(CharacterType.abilityPower)} ││ ");
+            Console.WriteLine("│├──────── 상태 이상 ────────┤     ├──────── 상태 이상 ────────┤│");
+            Console.WriteLine("││ 점화 lv.3 3 / 감점 lv.2 1 │     │ 점화 lv.3 3 / 감점 lv.2 1 ││");
+            Console.WriteLine("│└───────────────────────────┘     └───────────────────────────┘│");
+        }
+
         // 추가 해볼만한 이름들 : 용맹의 방패,
         enum PCharacter
         {
             balanceAndHarmony, symbolOfHellfire, heartOfFrozen,
         }
 
-        // 너는 class가 맞을까 struct가 맞을까...?
+        enum CharacterType
+        {
+            maxHealthPoint, healthPoint, healthRegen, maxShield, shield, attackDamage, armor, armor, abilityPower, magicResistnce, speed, level
+        }
+
+        struct abnormaleffect
+        {
+            private string effectName;
+            private int lv;
+            private int turn;
+
+            public abnormaleffect GetInfo()
+            {
+                return new abnormaleffect()
+                {
+                    effectName = this.effectName,
+                    lv = this.lv,
+                    turn = this.turn
+                };
+
+            }
+
+            public void SetInfo(string _name, int _lv, int _trun)
+            {
+                effectName = _name;
+                lv = _lv;
+                turn = _trun;
+            }
+        }
+
         /// <summary>
         /// 플레이어랑 적들 기본 구조
         /// </summary>
         struct Character
         {
+            private double maxHealthPoint;
             private double healthPoint;
             private double healthRegen;
+            private double maxShield;
+            private double shield
             private double attackDamage;
             private double armor;
             private double abilityPower;
@@ -689,6 +747,100 @@ namespace KeywordWarrior
             //    speed = _speed;
             //    level = 0;
             //}
+            public double GetCharacterInfo(CharacterType type)
+            {
+                switch (type)
+                {
+                    case CharacterType.maxHealthPoint:
+                        return maxHealthPoint;
+                    case CharacterType.healthPoint:
+                        return healthPoint;
+                    case CharacterType.healthRegen:
+                        return healthRegen;
+                    case CharacterType.maxShield:
+                        return maxShield;
+                    case CharacterType.shield:
+                        return shield;
+                    case CharacterType.attackDamage:
+                        return attackDamage;
+                    case CharacterType.armor:
+                        return armor
+                    case CharacterType.abilityPower :
+                        return abilityPower;
+                    case CharacterType.magicResistnce:
+                        return magicResistnce;
+                    case CharacterType.speed:
+                        return speed;
+                    case CharacterType.level:
+                        return (double) level;
+                }
+            }
+
+            public void Healing(double point = 0, bool isheal = false)
+            {
+                if(isheal)
+                {
+                    healthPoint = (healthPoint + point) > maxHealthPoint ? maxHealthPoint : healthPoint + point;
+                }
+                else
+                {
+                    healthPoint = (healthPoint + healthRegen) > maxHealthPoint ? maxHealthPoint : healthPoint + healthRegen ;
+                }
+            }
+
+            public void ShieldUp(double point = 0)
+            {
+                shield = (shield + point) > maxShield ? maxShield : shield + point;
+            }
+
+            public void ChangedState(double index, CharacterType type)
+            {
+                switch(type)
+                {
+                    case CharacterType.maxHealthPoint:
+                        maxHealthPoint += index;
+                        break;
+                    case CharacterType.healthPoint:
+                        healthPoint += index;
+                    case CharacterType.healthRegen:
+                        healthRegen += index;
+                        break;
+                    case CharacterType.maxShield:
+                        maxShield += index;
+                        break;
+                    case CharacterType.shield:
+                        shield += index;
+                        break;
+                    case CharacterType.attackDamage:
+                        attackDamage += index;
+                        break;
+                    case CharacterType.armor:
+                        armor += index;
+                        break;
+                    case CharacterType.abilityPower:
+                        abilityPower += index;
+                        break;
+                    case CharacterType.magicResistnce:
+                        magicResistnce += index;
+                        break;
+                    case CharacterType.speed:
+                        speed += index;
+                        break;
+                    case CharacterType.level:
+                        level += (int) index;
+                        break;
+                }
+            }
+
+            public double GetDef(bool isMagic)
+            {
+                return isMagic ? magicResistnce : armor;
+            }
+
+            public double GetDmg(bool isMagic)
+            {
+                return isMagic ? abilityPower : attackDamage;
+            }
 
             public void SelectChar(int c)
             {
@@ -696,8 +848,11 @@ namespace KeywordWarrior
                 {
                     case 0:
                         //균형과 조화
+                        maxHealthPoint = 100;
                         healthPoint = 100;
                         healthRegen = 1;
+                        maxShield = 100;
+                        shield = 0;
                         attackDamage = 1;
                         armor = 1;
                         abilityPower = 1;
@@ -719,6 +874,26 @@ namespace KeywordWarrior
                         attackDamage = 5;
                         armor = 1;
                         abilityPower = 5;
+                        magicResistnce = 1;
+                        speed = 100;
+                        level = 0;
+                        break;
+                }
+            }
+
+            private void LeveUpPlayer(int charNum, int lv)
+            {
+                switch(charNum)
+                {
+                    case 0:
+                        maxHealthPoint = 100;
+                        healthPoint = 100;
+                        healthRegen = 1;
+                        maxShield = 100;
+                        shield = 0;
+                        attackDamage = 1;
+                        armor = 1;
+                        abilityPower = 1;
                         magicResistnce = 1;
                         speed = 100;
                         level = 0;
