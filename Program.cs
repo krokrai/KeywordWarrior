@@ -25,11 +25,17 @@ namespace KeywordWarrior
         // - UI 만들기 ( 자동화 필수)
         // - 적 ai 만들기(;;;;)
 
-        public int FLOOR = 1;
+        static int FLOOR = 1;
+        static string[] combatLog = new string[5];
 
         static void Main(string[] args)
         {
-            UserInterfacePrinter();
+            Character p = new Character();
+            Character e = new Character();
+            p.SelectChar(0);
+            e.SelectMonster(0);
+            
+            CombatScreenPrinter(p,e);
             //char[,] Map;
             ////KeywordsActive("점화 복제 강화 점화 강화");
             //int maxCharater = 1; // 수동으로 어쩌구 캐릭터 최대치
@@ -165,25 +171,23 @@ namespace KeywordWarrior
          *  4. 휴식은 층당 0~1회, 마지막 방에서 나오지 않음
          *  5. 이벤트는 한 게임당 5~7회, 마지막 방에서 나오지 않음
          */
-        static void MapMaker(ref char[,] map)
+        /*static void MapMaker(ref char[,] map)
         {
             Random random = new Random();
             int t = random.Next(7, 12);
             map = new char[5, t];
             //byte a = 0;
-            /* (45 - 11) / 4 = 8 / 1 // 마지막 층은 반드시 9칸 - > 임시적으로 모든 층의 방에 갯수 통일
-             * 
-             */
+            //(45 - 11) / 4 = 8 / 1 // 마지막 층은 반드시 9칸 - > 임시적으로 모든 층의 방에 갯수 통일
 
             // 층이 넣어지면 a--;
             // t
 
-            // 9칸을 기준으로 7칸은 전투 1~2칸을 휴식 상점 이벤트 배치는 무관  // 77.77% 
+            // 9칸을 기준으로 7칸은 전투 1~2칸을 휴식 상점 이벤트 배치는 무관  // 77.77% => 80
             //t -= 11;
-            byte b = 0;
-            byte shop = 0;
-            byte rest = 0;
-            byte gameEvent = 0;
+            //byte b = 0;
+            //byte shop = 0;
+            //byte rest = 0;
+            //byte gameEvent = 0;
             for (int i = 0; i < 5; i++)
             {
                 //if (a > 0)
@@ -202,9 +206,9 @@ namespace KeywordWarrior
                     {
                         // 이방은 보스 방이여;
                     }
-                    else if (chance <= 79) // 전투 이외의 방
+                    else if (chance <= 80) // 전투 이외의 방
                     {
-                        byte nomalEvents = Convert.ToByte(random.Next(1, 22)); // 1 ~ 21 11 이벤트 7 휴식 3 상점
+                        byte nomalEvents = Convert.ToByte(random.Next(1, 21)); // 1 ~ 20 11 이벤트 7 휴식 3 상점
                         if (0 < chance && chance < 12) // 1 ~ 11
                         {
                             // 이벤트
@@ -213,9 +217,10 @@ namespace KeywordWarrior
                         {
                             // 휴식
                         }
-                        else // 19 ~ 21
+                        else // 19 ~ 20
                         {
                             // 상점
+                            
                         }
                     }
                     else
@@ -226,7 +231,7 @@ namespace KeywordWarrior
                 b = 0;
             }
 
-        }
+        }*/
 
 
         //int a = 5;
@@ -261,17 +266,25 @@ namespace KeywordWarrior
             
         }
 
-        enum Abilitys
+        enum AttackAbilitys
         {
-            Ignition, Reinforce, Copy
+            Attack,Ignition, strike
         }
 
+        enum DefensiveAbilitys
+        {
+            Defens,Shield
+        }
+
+        enum UtilityAbilitys
+        {
+            Reinforce, Copy
+        }
 
         static int KeywordsActive(string s)
         {
             string[] keyWords = s.Split(' ');
             int lv = 0;
-            int cp = 0;
             if (keyWords.Length > 5)
                 return -1;
             for (int i = 0; i < keyWords.GetLength(0); i++)
@@ -671,16 +684,26 @@ namespace KeywordWarrior
             private double speed { get; }
         }*/
 
-        static void CombatScreenPrinter(Character pChar, Character eChar)
+        static void CombatScreenPrinter(Character pChar, Character eChar) // pad를 이용한 공간 맞추기...
         {
-            Console.WriteLine("┌───────────────────────────────────────────────────────────────┐");
-            Console.WriteLine($"│──────────────────────── 현제 {FLOOR} 층 ────────────────────────────│");
-            Console.WriteLine("│┌───────────────────────────┐     ┌───────────────────────────┐│");
-            Console.WriteLine($"││체력   : {pChar.GetCharacterInfo(CharacterType.healthPoint)}  보호막 : {pChar.GetCharacterInfo(CharacterType.shield)} │     │체력  :  {eChar.GetCharacterInfo(CharacterType.healthPoint)}  보호막 : {eChar.GetCharacterInfo(CharacterType.shield)} ││");
-            Console.WriteLine($"││공격력 : {pChar.GetCharacterInfo(CharacterType.attackDamage)}  주문력 : {pChar.GetCharacterInfo(CharacterType.abilityPower)} │     │공격력 : {eChar.GetCharacterInfo(CharacterType.attackDamage)}  주문력 : {eChar.GetCharacterInfo(CharacterType.abilityPower)} ││ ");
-            Console.WriteLine("│├──────── 상태 이상 ────────┤     ├──────── 상태 이상 ────────┤│");
+            Console.WriteLine("┌───────────────────────────────────────────────────────────────────────┐");
+            Console.WriteLine($"│──────────────────────────── 현제 {FLOOR} 층 ────────────────────────────────│");
+            Console.WriteLine("│┌───────────────────────────────┐     ┌───────────────────────────────┐│");
+            Console.WriteLine($"││ 체력   : {pChar.GetCharacterInfo(CharacterType.healthPoint)} 보호막 : {pChar.GetCharacterInfo(CharacterType.shield)} │     │ 체력   : {eChar.GetCharacterInfo(CharacterType.healthPoint)} 보호막 : {eChar.GetCharacterInfo(CharacterType.shield)} ││");
+            Console.WriteLine($"││ 공격력 : {pChar.GetCharacterInfo(CharacterType.attackDamage)} 주문력 : {pChar.GetCharacterInfo(CharacterType.abilityPower)} │     │ 공격력 : {eChar.GetCharacterInfo(CharacterType.attackDamage)} 주문력 : {eChar.GetCharacterInfo(CharacterType.abilityPower)} ││ ");
+            Console.WriteLine("│├────────── 상태 이상 ──────────┤     ├────────── 상태 이상 ──────────┤│");
             Console.WriteLine("││ 점화 lv.3 3 / 감점 lv.2 1 │     │ 점화 lv.3 3 / 감점 lv.2 1 ││");
-            Console.WriteLine("│└───────────────────────────┘     └───────────────────────────┘│");
+            Console.WriteLine("│└───────────────────────────────┘     └───────────────────────────────┘│");
+            Console.WriteLine("│ 플레이어는 대상에게 점화 lv.2을 사용했다 피해량 : 100         │");
+            Console.WriteLine("│ 플레이거는 대상에게 상태이상 화염을 걸었다.                   │");
+            Console.WriteLine("│ 플레이어는 대상에게 점화 lv.2을 사용했다 피해량 : 100         │");
+            Console.WriteLine("│                                                                       │");
+            Console.WriteLine("│                                                                       │");
+            Console.WriteLine("│───────────────────────────────────────────────────────────────────────┤");
+            Console.WriteLine("│ 키워드 입력 :                                                         │"); //14 17
+            Console.WriteLine("└───────────────────────────────────────────────────────────────────────┘");
+            Console.SetCursorPosition(15, 14);
+            KeywordsActive(Console.ReadLine());
         }
 
         // 추가 해볼만한 이름들 : 용맹의 방패,
@@ -691,24 +714,32 @@ namespace KeywordWarrior
 
         enum CharacterType
         {
-            maxHealthPoint, healthPoint, healthRegen, maxShield, shield, attackDamage, armor, armor, abilityPower, magicResistnce, speed, level
+            maxHealthPoint, healthPoint, healthRegen, maxShield, shield, attackDamage, armor, abilityPower, magicResistnce, speed, level
         }
 
-        struct abnormaleffect
+        static void CombatLogPrinter()
+        {
+            for (int i = 0; i < combatLog.Length; i++)
+            {
+
+            }
+            Console.SetCursorPosition(3, 8);
+        }
+
+        struct AbnormalEffect
         {
             private string effectName;
             private int lv;
             private int turn;
 
-            public abnormaleffect GetInfo()
+            public AbnormalEffect GetInfo()
             {
-                return new abnormaleffect()
+                return new AbnormalEffect()
                 {
                     effectName = this.effectName,
                     lv = this.lv,
                     turn = this.turn
                 };
-
             }
 
             public void SetInfo(string _name, int _lv, int _trun)
@@ -728,13 +759,15 @@ namespace KeywordWarrior
             private double healthPoint;
             private double healthRegen;
             private double maxShield;
-            private double shield
+            private double shield;
             private double attackDamage;
             private double armor;
             private double abilityPower;
             private double magicResistnce;
             private double speed;
             private int level;
+
+            private AbnormalEffect[]  aEffect;
 
             //public Character(double _healthPoint, double _healthRegen, double _attackDamage, double _armor, double _abilityPower, double _magicResistncs, double _speed = 100)
             //{
@@ -747,33 +780,84 @@ namespace KeywordWarrior
             //    speed = _speed;
             //    level = 0;
             //}
-            public double GetCharacterInfo(CharacterType type)
+
+            public void Addeffect(AttackAbilitys type)
             {
+                byte slot = 0;
+                for (byte i = 0; i < aEffect.Length; i++)
+                {
+                    if (aEffect[i].Equals(new AbnormalEffect { "", 0, 0 }))
+                    {
+                        slot = i;
+                        break;
+                    }
+                }
+                if ( slot > 0)
+                {
+                    switch (type)
+                    {
+                        case AttackAbilitys.Ignition:
+                            aEffect[slot] = new AbnormalEffect{"점화",1,2};
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.Write("상태이상을 더 걸 수 없습니다.(최대 2개)");
+                }
+            }
+
+            public string GetCharacterInfo(CharacterType type)
+            {
+                string s;
                 switch (type)
                 {
                     case CharacterType.maxHealthPoint:
-                        return maxHealthPoint;
+                        s = maxHealthPoint.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.healthPoint:
-                        return healthPoint;
+                        s = healthPoint.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.healthRegen:
-                        return healthRegen;
+                        s = healthRegen.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.maxShield:
-                        return maxShield;
+                        s = maxShield.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.shield:
-                        return shield;
+                        s = shield.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.attackDamage:
-                        return attackDamage;
+                        s = attackDamage.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.armor:
-                        return armor
+                        s = armor.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.abilityPower :
-                        return abilityPower;
+                        s = abilityPower.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.magicResistnce:
-                        return magicResistnce;
+                        s = magicResistnce.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.speed:
-                        return speed;
+                        s = speed.ToString("0.0");
+                        s = s.PadLeft(5, ' ');
+                        return s;
                     case CharacterType.level:
-                        return (double) level;
+                        s = level.ToString();
+                        s = s.PadLeft(3, ' ');
+                        return s;
                 }
+                return "None";
             }
 
             public void Healing(double point = 0, bool isheal = false)
@@ -802,6 +886,7 @@ namespace KeywordWarrior
                         break;
                     case CharacterType.healthPoint:
                         healthPoint += index;
+                        break;
                     case CharacterType.healthRegen:
                         healthRegen += index;
                         break;
@@ -844,6 +929,7 @@ namespace KeywordWarrior
 
             public void SelectChar(int c)
             {
+                aEffect = new AbnormalEffect[2];
                 switch (c)
                 {
                     case 0:
@@ -903,6 +989,7 @@ namespace KeywordWarrior
 
             public void SelectMonster(int m)
             {
+                aEffect = new AbnormalEffect[2];
                 switch (m)
                 {
                     case 0:
