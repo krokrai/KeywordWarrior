@@ -26,6 +26,7 @@ class Program // warrior do you best
     {
         ScreenRenderer scrRender = new ScreenRenderer();
         scrRender.BasicMapRender();
+
         // 랜더링 재작업 75%
         // 추가 작업 필요 : 화면 내에서 선택 및 전환 추가 필요
         // 이후 작업 : 랜더이 외에 작업

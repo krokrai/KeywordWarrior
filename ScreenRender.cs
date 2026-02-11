@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using tempss.Util;
 
 namespace KeywordWarrior
 {
@@ -44,7 +46,16 @@ namespace KeywordWarrior
             }
         }
 
-        public void ScreenRender()
+        // 화면 전체를 랜더링 해줄 함수
+        // + 화면 위치에 따라서 자동 랜더링 하는 거 만들기.
+        public void ScreenRender(in string s)
+        {
+
+        }
+
+        // 화면 일부(선택 부분이 바뀔) 랜더링 함수
+        // + 위에 구현된 부분에서 몇번째 줄만 바뀔 건지.
+        public void ScreenPartlyRender(Position p, string s)
         {
 
         }
