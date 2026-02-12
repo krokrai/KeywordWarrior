@@ -1,15 +1,5 @@
 ﻿using KeywordWarrior;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Diagnostics.SymbolStore;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 class Program // warrior do you best
 {
@@ -26,6 +16,7 @@ class Program // warrior do you best
     {
         ScreenRenderer scrRender = new ScreenRenderer();
         scrRender.BasicMapRender();
+        scrRender.ScreenRender();
 
         // 랜더링 재작업 75%
         // 추가 작업 필요 : 화면 내에서 선택 및 전환 추가 필요

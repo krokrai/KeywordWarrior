@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using tempss.Util;
 
 namespace KeywordWarrior
 {
@@ -12,6 +10,8 @@ namespace KeywordWarrior
 
         private const int CONSOLESIZEI = 20;
         private const int CONSOLESIZEE = 161;
+
+        private Maps _map;
 
         public ScreenRenderer()
         {
@@ -27,11 +27,11 @@ namespace KeywordWarrior
                 {
                     if ((i == 0 && j == 0) || (i == TOP - 1 && j == LEFT - 1) || (i == TOP - 1 && j == 0) || (i == 0 && j == LEFT - 1))
                     {
-                        "◎".ColorPrinterString(ConsoleColor.Gray);
+                        "□".ColorPrinterString(ConsoleColor.Gray);
                     }
                     else if ( ( i == 0 || i == TOP - 1 ) )
                     {
-                        "〓".ColorPrinterString(ConsoleColor.Gray);
+                        "ㅡ".ColorPrinterString(ConsoleColor.Gray);
                     }
                     else if ( (j == 0 || j == LEFT - 1) )
                     {
@@ -46,18 +46,33 @@ namespace KeywordWarrior
             }
         }
 
+        // 아래 Render부분 하드코딩으로 임시 작업 및 후에 필요시 코드 개선
+
         // 화면 전체를 랜더링 해줄 함수
         // + 화면 위치에 따라서 자동 랜더링 하는 거 만들기.
-        public void ScreenRender(in string s)
+        //public void ScreenRender(in string[] s)
+        public void ScreenRender()
         {
-
+            _map.MapLoader(0);
+            Console.SetCursorPosition(1,1);
+            for (int i = 0; i < _map._scr.Length;i++)
+            {
+                Console.SetCursorPosition(2, 2 + i);
+                _map._scr[i].ColorPrinterString(ConsoleColor.Gray);
+            }
         }
 
         // 화면 일부(선택 부분이 바뀔) 랜더링 함수
         // + 위에 구현된 부분에서 몇번째 줄만 바뀔 건지.
-        public void ScreenPartlyRender(Position p, string s)
+        //public void ScreenPartlyRender(Position p, string s)
+        public void ScreenPartlyRender()
         {
+            switch(_map._currentSelect)
+            {
+                case 0:
 
+                    break;
+            }
         }
     }
 }
