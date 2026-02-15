@@ -17,6 +17,18 @@ class Program // warrior do you best
         ScreenRenderer scrRender = new ScreenRenderer();
         scrRender.BasicMapRender();
         scrRender.ScreenRender();
+        while  (true)
+        {
+            if (Console.ReadKey().Key == ConsoleKey.UpArrow)
+            {
+                scrRender.ScreenPartlyRender(Select.Up);
+            }
+            else if (Console.ReadKey().Key == ConsoleKey.DownArrow)
+            {
+                scrRender.ScreenPartlyRender(Select.Down);
+            }
+        }
+            
 
         // 랜더링 재작업 75%
         // 추가 작업 필요 : 화면 내에서 선택 및 전환 추가 필요

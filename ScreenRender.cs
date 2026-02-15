@@ -1,5 +1,10 @@
 ﻿using System;
 
+public enum Select
+{
+    Up = 1,Down = -1, Nomal = 0
+}
+
 namespace KeywordWarrior
 {
     public class ScreenRenderer
@@ -11,11 +16,17 @@ namespace KeywordWarrior
         private const int CONSOLESIZEI = 20;
         private const int CONSOLESIZEE = 161;
 
+        private int _currentSelected;
+        private int _maxSelectNum;
+
+        private Position CursorPos;
+
         private Maps _map;
 
         public ScreenRenderer()
         {
             Console.SetWindowSize(CONSOLESIZEE, CONSOLESIZEI);
+            _currentSelected = 0;
         }
 
         public void BasicMapRender()
@@ -53,26 +64,47 @@ namespace KeywordWarrior
         //public void ScreenRender(in string[] s)
         public void ScreenRender()
         {
-            _map.MapLoader(0);
-            Console.SetCursorPosition(1,1);
+            CursorPos = _map.MapLoader(0);
+            _maxSelectNum = _map._position.Count;
+
+            Console.SetCursorPosition(CursorPos.X,CursorPos.Y);
+            CursorPos++;
             for (int i = 0; i < _map._scr.Length;i++)
             {
-                Console.SetCursorPosition(2, 2 + i);
+                Console.SetCursorPosition(CursorPos.X, CursorPos.Y + i);
                 _map._scr[i].ColorPrinterString(ConsoleColor.Gray);
             }
+
+            ScreenPartlyRender(Select.Up);
         }
 
         // 화면 일부(선택 부분이 바뀔) 랜더링 함수
         // + 위에 구현된 부분에서 몇번째 줄만 바뀔 건지.
         //public void ScreenPartlyRender(Position p, string s)
-        public void ScreenPartlyRender()
+        public void ScreenPartlyRender(Select sel)
         {
-            switch(_map._currentSelect)
+            // 움직임에 문제가 있음.
+            // 움직일 때마다 초기화 필요함.
+            switch(sel)
             {
-                case 0:
+                case Select.Up:
+                    if ( _currentSelected < _maxSelectNum )
+                        _currentSelected++;
+                    break;
+                case Select.Down:
+                    if (_currentSelected > 2)
+                        _currentSelected--;
+                    break;
+                case Select.Nomal:
 
                     break;
             }
+
+            CursorPos = _map._position[_currentSelected];
+
+            Console.SetCursorPosition(CursorPos.X, CursorPos.Y);
+            _map._scrSel[_currentSelected - 1].ColorPrinterString(ConsoleColor.Gray);
+
         }
     }
 }
