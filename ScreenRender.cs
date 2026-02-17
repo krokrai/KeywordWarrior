@@ -13,11 +13,16 @@ namespace KeywordWarrior
         private const int TOP = 18;
         private const int LEFT = 80;
 
+        // console 사이즈 표준화
         private const int CONSOLESIZEI = 20;
         private const int CONSOLESIZEE = 161;
 
-        private int _currentSelected;
+        private int _currentSelecte;
+        private int _nextSelecte;
         private int _maxSelectNum;
+
+        // 선택지가 여러개(2개 이상)일 때 선택 했던 부분 초기화 해주기 위한 보정치 변수
+        private int _scrModif;
 
         private Position CursorPos;
 
@@ -26,7 +31,7 @@ namespace KeywordWarrior
         public ScreenRenderer()
         {
             Console.SetWindowSize(CONSOLESIZEE, CONSOLESIZEI);
-            _currentSelected = 0;
+            _currentSelecte = 1;
         }
 
         public void BasicMapRender()
@@ -58,14 +63,11 @@ namespace KeywordWarrior
         }
 
         // 아래 Render부분 하드코딩으로 임시 작업 및 후에 필요시 코드 개선
-
-        // 화면 전체를 랜더링 해줄 함수
-        // + 화면 위치에 따라서 자동 랜더링 하는 거 만들기.
-        //public void ScreenRender(in string[] s)
         public void ScreenRender()
         {
             CursorPos = _map.MapLoader(0);
-            _maxSelectNum = _map._position.Count;
+            _maxSelectNum = _map._position.Count - 2;
+            _scrModif = _map._scrSel.Length / 2;
 
             Console.SetCursorPosition(CursorPos.X,CursorPos.Y);
             CursorPos++;
@@ -75,36 +77,40 @@ namespace KeywordWarrior
                 _map._scr[i].ColorPrinterString(ConsoleColor.Gray);
             }
 
-            ScreenPartlyRender(Select.Up);
+            ChangedSelect();
         }
 
-        // 화면 일부(선택 부분이 바뀔) 랜더링 함수
-        // + 위에 구현된 부분에서 몇번째 줄만 바뀔 건지.
-        //public void ScreenPartlyRender(Position p, string s)
         public void ScreenPartlyRender(Select sel)
         {
-            // 움직임에 문제가 있음.
-            // 움직일 때마다 초기화 필요함.
             switch(sel)
             {
                 case Select.Up:
-                    if ( _currentSelected < _maxSelectNum )
-                        _currentSelected++;
+                    if (_currentSelecte <= 0) return;
+                    _nextSelecte = _currentSelecte - 1;
+                    ChangedSelect();
                     break;
                 case Select.Down:
-                    if (_currentSelected > 2)
-                        _currentSelected--;
+                    if (_currentSelecte >= _maxSelectNum) return;
+                    _nextSelecte = _currentSelecte + 1;
+                    ChangedSelect();
                     break;
                 case Select.Nomal:
 
                     break;
             }
+        }
 
-            CursorPos = _map._position[_currentSelected];
-
+        private void ChangedSelect()
+        {
+            CursorPos = _map._position[_currentSelecte + 1];
             Console.SetCursorPosition(CursorPos.X, CursorPos.Y);
-            _map._scrSel[_currentSelected - 1].ColorPrinterString(ConsoleColor.Gray);
+            _map._scrSel[(_currentSelecte + _scrModif)].ColorPrinterString(ConsoleColor.Gray);
 
+            CursorPos = _map._position[_nextSelecte + 1];
+            Console.SetCursorPosition(CursorPos.X, CursorPos.Y);
+            _map._scrSel[_nextSelecte].ColorPrinterString(ConsoleColor.Red);
+
+            _currentSelecte = _nextSelecte;
         }
     }
 }

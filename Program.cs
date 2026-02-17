@@ -15,24 +15,22 @@ class Program // warrior do you best
     static void Main(string[] args)
     {
         ScreenRenderer scrRender = new ScreenRenderer();
+        
         scrRender.BasicMapRender();
         scrRender.ScreenRender();
+
         while  (true)
         {
-            if (Console.ReadKey().Key == ConsoleKey.UpArrow)
+            switch(Console.ReadKey().Key)
             {
-                scrRender.ScreenPartlyRender(Select.Up);
-            }
-            else if (Console.ReadKey().Key == ConsoleKey.DownArrow)
-            {
-                scrRender.ScreenPartlyRender(Select.Down);
+                case ConsoleKey.UpArrow:
+                    scrRender.ScreenPartlyRender(Select.Up);
+                    break;
+                case ConsoleKey.DownArrow:
+                    scrRender.ScreenPartlyRender(Select.Down);
+                    break;
             }
         }
-            
-
-        // 랜더링 재작업 75%
-        // 추가 작업 필요 : 화면 내에서 선택 및 전환 추가 필요
-        // 이후 작업 : 랜더이 외에 작업
 
 
 
@@ -345,53 +343,6 @@ class Program // warrior do you best
             }
         }
         return false;
-    }
-
-    /// <summary>
-    /// 메인 메뉴 띄어주기!
-    /// switch 문을 사용한 ★노☆가★다☆
-    /// </summary>
-    /// <returns> 0 : 게임 시작 / 1 : 게임 종료</returns>
-    static int MainMenu()
-    {
-        byte arrowPos = 0;
-        Console.WriteLine("-------------------------------");
-        Console.WriteLine("------Keyword Warrior----------");
-        Console.WriteLine("-------------------------------\n");
-        Console.WriteLine("      -> 게임 시작");
-        Console.WriteLine("         게임 종료");
-        while (true)
-        {
-            ConsoleKey cnKey = Console.ReadKey().Key;
-            if (cnKey == ConsoleKey.DownArrow || cnKey == ConsoleKey.UpArrow)
-            {
-                Console.Clear();
-                switch (arrowPos)
-                {
-                    case 0:
-                        Console.WriteLine("-------------------------------");
-                        Console.WriteLine("------Keyword Warrior----------");
-                        Console.WriteLine("-------------------------------\n");
-                        Console.WriteLine("         게임 시작");
-                        Console.WriteLine("      -> 게임 종료");
-                        arrowPos++;
-                        break;
-                    case 1:
-                        Console.WriteLine("-------------------------------");
-                        Console.WriteLine("------Keyword Warrior----------");
-                        Console.WriteLine("-------------------------------\n");
-                        Console.WriteLine("      -> 게임 시작");
-                        Console.WriteLine("         게임 종료");
-                        arrowPos--;
-                        break;
-                }
-            }
-            else if (cnKey == ConsoleKey.Enter)
-            {
-                Console.Clear();
-                return arrowPos;
-            }
-        }
     }
 
     /// <summary>

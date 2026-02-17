@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 public enum MapList
 {
@@ -34,9 +33,12 @@ public struct Maps
     {
         if (_position.Count > 0)
             _position.Clear();
-        _position.Add(new Position(71, 4));
-        _position.Add(new Position(72, 8));
+        
+        _position.Add(new Position(71, 4)); // 생성될 위치
+        
+        _position.Add(new Position(72, 8)); // 선택지에 따라 바뀔 위치.
         _position.Add(new Position(72, 9));
+
         _scr = new string[] { "□ㅡㅡㅡㅡㅡㅡㅡ□",
                                         "ㅣ키워드　워리어ㅣ",
                                         "□ㅡㅡㅡㅡㅡㅡㅡ□",
@@ -45,6 +47,8 @@ public struct Maps
                                         "□ㅡㅡㅡㅡㅡㅡㅡ□"};
 
         _scrSel = new string[] { "ㅣ→게임　시작　ㅣ",
-                                             "ㅣ→게임　종료　ㅣ" };
+                                             "ㅣ→게임　종료　ㅣ",
+                                             "ㅣ　게임　시작　ㅣ",
+                                             "ㅣ　게임　종료　ㅣ"};
     }
 }
