@@ -32,8 +32,12 @@ namespace KeywordWarrior
         {
             Console.SetWindowSize(CONSOLESIZEE, CONSOLESIZEI);
             _currentSelecte = 1;
+            CursorPos = new Position(-1, -1);
         }
 
+        /// <summary>
+        /// 비용이 비싸서 가급적 호출 자제.
+        /// </summary>
         public void BasicMapRender()
         {
             // 모서리 : ◎ / 수평 일자 : 〓 / 수직 일자 : ㅣ 빈공간 : "　"
@@ -63,14 +67,20 @@ namespace KeywordWarrior
         }
 
         // 아래 Render부분 하드코딩으로 임시 작업 및 후에 필요시 코드 개선
-        public void ScreenRender()
+        /// <summary>
+        /// 첫 화면인 경우에만 호출 후 사용 (예외처리 배제할 예정)
+        /// </summary>
+        public void ScreenRender(MapList maplist)
         {
-            CursorPos = _map.MapLoader(0);
+            if(CursorPos.X != -1 &&  CursorPos.Y != -1)
+                ScreenEraser();
+
+            CursorPos = _map.MapLoader(maplist);
             _maxSelectNum = _map._position.Count - 2;
             _scrModif = _map._scrSel.Length / 2;
 
-            Console.SetCursorPosition(CursorPos.X,CursorPos.Y);
-            CursorPos++;
+            //Console.SetCursorPosition(CursorPos.X,CursorPos.Y);
+            //CursorPos++;
             for (int i = 0; i < _map._scr.Length;i++)
             {
                 Console.SetCursorPosition(CursorPos.X, CursorPos.Y + i);
@@ -78,6 +88,26 @@ namespace KeywordWarrior
             }
 
             ChangedSelect();
+        }
+
+        public void ScreenEraser()
+        {
+            //Console.SetCursorPosition(CursorPos.X,CursorPos.Y);
+            int n = _map._scr[0].Length;
+            int i;
+            char[] c = new char[n];
+            for (i = 0; i < c.Length; i ++)
+            {
+                c[i] = '　';
+            }
+
+            string s = new string(c);
+
+            for (i = 0; i < _map._scr.Length; i++)
+            {
+                Console.SetCursorPosition(_map._position[0].X, _map._position[0].Y + i);
+                s.ColorPrinterString(ConsoleColor.Gray);
+            }
         }
 
         public void ScreenPartlyRender(Select sel)

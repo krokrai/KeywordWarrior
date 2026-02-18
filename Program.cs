@@ -15,9 +15,10 @@ class Program // warrior do you best
     static void Main(string[] args)
     {
         ScreenRenderer scrRender = new ScreenRenderer();
+        // Console.CursorVisible = false; // 마지막 작업때 주석 해제 필요
         
         scrRender.BasicMapRender();
-        scrRender.ScreenRender();
+        scrRender.ScreenRender(MapList.MainMenu);
 
         while  (true)
         {
@@ -28,6 +29,9 @@ class Program // warrior do you best
                     break;
                 case ConsoleKey.DownArrow:
                     scrRender.ScreenPartlyRender(Select.Down);
+                    break;
+                case ConsoleKey.Z:
+                    scrRender.ScreenEraser();
                     break;
             }
         }
