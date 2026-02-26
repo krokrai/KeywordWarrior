@@ -40,7 +40,7 @@ namespace KeywordWarrior
         /// </summary>
         public void BasicMapRender()
         {
-            // 모서리 : ◎ / 수평 일자 : 〓 / 수직 일자 : ㅣ 빈공간 : "　"
+            // 모서리 : □ / 수평 일자 : ㅡ / 수직 일자 : ㅣ 빈공간 : "　"
             for (int i = 0; i < TOP; i++)
             {
                 for (int j = 0; j < LEFT; j++)
@@ -67,9 +67,6 @@ namespace KeywordWarrior
         }
 
         // 아래 Render부분 하드코딩으로 임시 작업 및 후에 필요시 코드 개선
-        /// <summary>
-        /// 첫 화면인 경우에만 호출 후 사용 (예외처리 배제할 예정)
-        /// </summary>
         public void ScreenRender(MapList maplist)
         {
             if(CursorPos.X != -1 &&  CursorPos.Y != -1)
@@ -90,9 +87,11 @@ namespace KeywordWarrior
             ChangedSelect();
         }
 
+        // 화면을 부분적으로 지우기
         public void ScreenEraser()
         {
-            //Console.SetCursorPosition(CursorPos.X,CursorPos.Y);
+
+            // 후에 밑에 줄은 재작업(refactor) 필요
             int n = _map._scr[0].Length;
             int i;
             char[] c = new char[n];
@@ -110,6 +109,7 @@ namespace KeywordWarrior
             }
         }
 
+        // 선택지를 움직이기 위한 함수.
         public void ScreenPartlyRender(Select sel)
         {
             switch(sel)
@@ -130,6 +130,7 @@ namespace KeywordWarrior
             }
         }
 
+        // 전 위치는 지우고 후 위치를 바꾸는.
         private void ChangedSelect()
         {
             CursorPos = _map._position[_currentSelecte + 1];

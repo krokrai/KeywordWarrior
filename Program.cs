@@ -30,8 +30,9 @@ class Program // warrior do you best
                 case ConsoleKey.DownArrow:
                     scrRender.ScreenPartlyRender(Select.Down);
                     break;
+                    // 선택
                 case ConsoleKey.Z:
-                    scrRender.ScreenEraser();
+                    //scrRender.ScreenEraser();
                     break;
             }
         }
